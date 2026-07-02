@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0d0d0d;
+  --foreground: #ffffff;
+  --primary: #8B5523;
+  --primary-foreground: #ffffff;
+  --muted-foreground: #888888;
+  --border: rgba(255,255,255,0.05);
+  --card: #111111;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--background); color: var(--foreground); font-family: 'Segoe UI', sans-serif; }

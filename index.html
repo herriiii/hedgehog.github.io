@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hedgehog Bot</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0d0d0d; color: #fff; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 3rem; background: #0d0d0d;
+      border-bottom: 1px solid #1e1e1e; position: sticky; top: 0; z-index: 99;
+    }
+    .logo { font-size: 1.3rem; font-weight: 900; color: #8B5523; letter-spacing: 2px; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: #888; text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .nav-links a:hover { color: #8B5523; }
+    .invite-btn {
+      background: #8B5523; color: #fff; border: none; padding: .6rem 1.4rem;
+      border-radius: 6px; font-weight: 700; cursor: pointer; font-size: .9rem; transition: .2s;
+    }
+    .invite-btn:hover { background: #7a4312; }
+
+    .hero { text-align: center; padding: 6rem 2rem 4rem; }
+    .badge {
+      display: inline-block; background: #1a1a1a; border: 1px solid #8B5523;
+      color: #8B5523; font-size: .75rem; padding: .3rem .9rem;
+      border-radius: 999px; margin-bottom: 1.5rem; letter-spacing: 1px;
+    }
+    .hero h1 { font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.2rem; }
+    .hero h1 span { color: #8B5523; }
+    .hero p { font-size: 1.1rem; color: #999; max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.6; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-p {
+      background: #8B5523; color: #fff; padding: .85rem 2.2rem;
+      border-radius: 8px; font-weight: 700; text-decoration: none; transition: .2s;
+    }
+    .btn-p:hover { background: #7a4312; transform: translateY(-2px); }
+    .btn-g {
+      background: transparent; color: #fff; border: 1px solid #333;
+      padding: .85rem 2.2rem; border-radius: 8px; font-weight: 700; text-decoration: none; transition: .2s;
+    }
+    .btn-g:hover { border-color: #8B5523; transform: translateY(-2px); }
+
+    .stats {
+      display: flex; justify-content: center; gap: 3rem; padding: 3rem 2rem;
+      border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2.5rem; font-weight: 900; color: #8B5523; }
+    .stat-label { color: #555; font-size: .85rem; margin-top: .3rem; }
+
+    section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .tag { color: #8B5523; font-size: .75rem; font-weight: 700; letter-spacing: 2px; margin-bottom: .8rem; }
+    .stitle { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; margin-bottom: 1rem; }
+    .sdesc { color: #888; font-size: 1rem; line-height: 1.6; max-width: 550px; margin-bottom: 3rem; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.2rem; }
+    .card {
+      background: #111; border: 1px solid #1e1e1e; border-radius: 12px;
+      padding: 1.5rem; transition: .2s;
+    }
+    .card:hover { border-color: #8B5523; transform: translateY(-3px); }
+    .card .ico { font-size: 2rem; margin-bottom: .8rem; }
+    .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+    .card p { color: #555; font-size: .85rem; line-height: 1.5; }
+
+    .divider { width: 100%; height: 1px; background: #1a1a1a; }
+
+    .dark-section { background: #0a0a0a; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; }
+    .dark-section section { max-width: 1100px; }
+
+    .cmd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 700px) { .cmd-grid { grid-template-columns: 1fr; } .nav-links { display: none; } }
+    .cmd-group h3 { color: #8B5523; font-size: .9rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 1rem; }
+    .cmd-list { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .cmd-list li {
+      background: #111; border: 1px solid #1e1e1e; border-radius: 6px;
+      padding: .5rem .9rem; font-family: monospace; font-size: .85rem;
+      display: flex; justify-content: space-between;
+    }
+    .cmd-list li span { color: #8B5523; font-weight: 700; }
+    .cmd-list li small { color: #444; font-size: .8rem; }
+
+    .fun-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+    .fun-card {
+      background: #111; border: 1px solid #1a1a1a; border-radius: 10px;
+      padding: 1.2rem; text-align: center; transition: .2s; cursor: default;
+    }
+    .fun-card:hover { border-color: #8B5523; background: #131008; }
+    .fun-card .e { font-size: 2rem; margin-bottom: .5rem; }
+    .fun-card h4 { font-size: .9rem; font-weight: 700; margin-bottom: .2rem; }
+    .fun-card p { color: #555; font-size: .75rem; }
+
+    .log-box { background: #0a0a0a; border: 1px solid #1e1e1e; border-radius: 12px; overflow: hidden; }
+    .log-bar {
+      background: #111; padding: .6rem 1rem; display: flex;
+      align-items: center; gap: .5rem; border-bottom: 1px solid #1e1e1e;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .log-body { padding: 1.2rem 1.5rem; font-family: monospace; font-size: .85rem; line-height: 2; }
+    .log-line { display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; }
+    .log-time { color: #333; }
+    .lt { padding: .15rem .5rem; border-radius: 4px; font-size: .75rem; font-weight: 700; }
+    .lt.ban { background: #ff00001a; color: #ff5252; }
+    .lt.kick { background: #8B55231a; color: #8B5523; }
+    .lt.warn { background: #ffc1071a; color: #ffc107; }
+    .lt.ok { background: #00e6761a; color: #00e676; }
+    .log-msg { color: #ccc; }
+    .log-r { color: #444; font-size: .8rem; }
+
+    .yt-card {
+      background: linear-gradient(135deg, #131008, #0d0d0d);
+      border: 1px solid #8B5523; border-radius: 16px;
+      padding: 2.5rem; display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;
+    }
+    .yt-card .yi { font-size: 4rem; }
+    .yt-card h3 { font-size: 1.5rem; font-weight: 900; margin-bottom: .6rem; }
+    .yt-card p { color: #777; line-height: 1.6; max-width: 420px; }
+
+    .cta { text-align: center; padding: 6rem 2rem; }
+    .cta h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 1rem; }
+    .cta p { color: #777; margin-bottom: 2rem; }
+
+    footer {
+      border-top: 1px solid #1a1a1a; padding: 2rem 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem; color: #333; font-size: .85rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🦔 HEDGEHOG</div>
+  <div class="nav-links">
+    <a href="#mod">Modération</a>
+    <a href="#cmds">Commandes</a>
+    <a href="#fun">Fun</a>
+    <a href="#yt">YouTube</a>
+  </div>
+  <button class="invite-btn" onclick="alert('Mets ton lien d\'invitation Discord ici !')">Inviter le bot</button>
+</nav>
+
+<div class="hero">
+  <div class="badge">🟢 EN LIGNE · 24/7</div>
+  <h1>L'admin que ton<br><span>serveur mérite.</span></h1>
+  <p>Hedgehog est le bot Discord tout-en-un pour les communautés francophones. Modération, fun, logs, notifications YouTube — tout est là.</p>
+  <div class="hero-btns">
+    <a href="#" class="btn-p">🚀 Inviter Hedgehog</a>
+    <a href="#cmds" class="btn-g">Voir les commandes</a>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">30+</div><div class="stat-label">Commandes</div></div>
+  <div class="stat"><div class="stat-num">5</div><div class="stat-label">Catégories</div></div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">En ligne</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Gratuit</div></div>
+</div>
+
+<section id="mod">
+  <div class="tag">🛡️ MODÉRATION</div>
+  <div class="stitle">Tolérance zéro.</div>
+  <p class="sdesc">Toutes les commandes pour garder ton serveur propre. Logs automatiques sur chaque action.</p>
+  <div class="grid">
+    <div class="card"><div class="ico">🔨</div><h3>Ban</h3><p>Bannit définitivement avec log DM + salon de logs.</p></div>
+    <div class="card"><div class="ico">👢</div><h3>Kick</h3><p>Expulse un membre avec raison et notification.</p></div>
+    <div class="card"><div class="ico">⚠️</div><h3>Warn</h3><p>3 avertissements = kick automatique.</p></div>
+    <div class="card"><div class="ico">⏳</div><h3>Timeout</h3><p>Isole temporairement (durée personnalisable).</p></div>
+    <div class="card"><div class="ico">🔒</div><h3>Lock / Unlock</h3><p>Verrouille ou déverrouille un salon en 1 commande.</p></div>
+    <div class="card"><div class="ico">🗑️</div><h3>Purge</h3><p>Supprime jusqu'à 100 messages en une fois.</p></div>
+    <div class="card"><div class="ico">🤖</div><h3>Anti-flood</h3><p>Timeout auto si trop de messages en peu de temps.</p></div>
+    <div class="card"><div class="ico">🐌</div><h3>Slowmode</h3><p>Mode lent configurable par salon.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<div class="dark-section">
+  <section style="max-width:1100px;">
+    <div class="tag">📋 LOGS</div>
+    <div class="stitle">Tout est tracé.</div>
+    <p class="sdesc">Chaque sanction génère un embed dans le salon de logs + un DM à l'utilisateur.</p>
+    <div class="log-box">
+      <div class="log-bar">
+        <div class="dot" style="background:#ff5f56"></div>
+        <div class="dot" style="background:#ffbd2e"></div>
+        <div class="dot" style="background:#27c93f"></div>
+        <span style="color:#444;font-size:.8rem;margin-left:.5rem;font-family:monospace">#mod-logs — Hedgehog</span>
+      </div>
+      <div class="log-body">
+        <div class="log-line"><span class="log-time">13:31</span><span class="lt ban">BAN</span><span class="log-msg">NotSoBot banni</span><span class="log-r">— spam de liens</span></div>
+        <div class="log-line"><span class="log-time">13:28</span><span class="lt kick">KICK</span><span class="log-msg">xX_drago_Xx expulsé</span><span class="log-r">— comportement toxique</span></div>
+        <div class="log-line"><span class="log-time">13:15</span><span class="lt warn">WARN</span><span class="log-msg">random_user averti [2/3]</span><span class="log-r">— langage inapproprié</span></div>
+        <div class="log-line"><span class="log-time">13:02</span><span class="lt ok">UNBAN</span><span class="log-msg">ancien_banni débanni</span><span class="log-r">— appel accepté</span></div>
+        <div class="log-line"><span class="log-time">12:55</span><span class="lt ban">AUTOMOD</span><span class="log-msg">flood_guy timeout 60min</span><span class="log-r">— anti-flood</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section id="cmds">
+  <div class="tag">⚙️ COMMANDES</div>
+  <div class="stitle">Ce qu'il sait faire.</div>
+  <p class="sdesc">Utilise <code style="color:#8B5523;background:#1a1a1a;padding:.1rem .4rem;border-radius:4px">!help</code> dans Discord pour la liste complète interactive.</p>
+  <div class="cmd-grid">
+    <div class="cmd-group">
+      <h3>🛡️ MODÉRATION</h3>
+      <ul class="cmd-list">
+        <li><span>!ban</span> <small>@user [raison]</small></li>
+        <li><span>!kick</span> <small>@user [raison]</small></li>
+        <li><span>!warn</span> <small>@user [raison]</small></li>
+        <li><span>!timeout</span> <small>@user minutes</small></li>
+        <li><span>!purge</span> <small>nombre (max 100)</small></li>
+        <li><span>!lock</span> <small>/ !unlock</small></li>
+        <li><span>!slowmode</span> <small>secondes</small></li>
+      </ul>
+    </div>
+    <div class="cmd-group">
+      <h3>🔧 UTILITAIRES</h3>
+      <ul class="cmd-list">
+        <li><span>!userinfo</span> <small>@user</small></li>
+        <li><span>!serverinfo</span></li>
+        <li><span>!avatar</span> <small>@user</small></li>
+        <li><span>!poll</span> <small>question</small></li>
+        <li><span>!dl</span> <small>url</small></li>
+        <li><span>!botinfo</span></li>
+        <li><span>!uptime</span></li>
+      </ul>
+    </div>
+    <div class="cmd-group">
+      <h3>🎲 FUN</h3>
+      <ul class="cmd-list">
+        <li><span>!8ball</span> <small>question</small></li>
+        <li><span>!ship</span> <small>@u1 @u2</small></li>
+        <li><span>!pp</span> <small>[@user]</small></li>
+        <li><span>!roast</span> <small>@user</small></li>
+        <li><span>!rps</span> <small>pierre/feuille/ciseaux</small></li>
+        <li><span>!mock</span> <small>texte</small></li>
+        <li><span>!reverse</span> <small>texte</small></li>
+      </ul>
+    </div>
+    <div class="cmd-group">
+      <h3>💰 ÉCONOMIE</h3>
+      <ul class="cmd-list">
+        <li><span>!cb</span> <small>[@user] — voir solde</small></li>
+        <li><span>!giveeuro</span> <small>montant @user</small></li>
+        <li><span>!addeuro</span> <small>@user montant (admin)</small></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="fun">
+  <div class="tag">🎉 FUN</div>
+  <div class="stitle">Un peu d'ambiance.</div>
+  <p class="sdesc">Parce que modérer c'est bien, mais rigoler c'est mieux.</p>
+  <div class="fun-grid">
+    <div class="fun-card"><div class="e">🎱</div><h4>!8ball</h4><p>Pose une question à l'oracle</p></div>
+    <div class="fun-card"><div class="e">💘</div><h4>!ship</h4><p>Compatibilité amoureuse</p></div>
+    <div class="fun-card"><div class="e">🍆</div><h4>!pp</h4><p>Mesure le courage</p></div>
+    <div class="fun-card"><div class="e">🔥</div><h4>!roast</h4><p>Insulte avec classe</p></div>
+    <div class="fun-card"><div class="e">✂️</div><h4>!rps</h4><p>Pierre feuille ciseaux</p></div>
+    <div class="fun-card"><div class="e">🤗</div><h4>!hug</h4><p>Câlin virtuel</p></div>
+    <div class="fun-card"><div class="e">👋</div><h4>!slap</h4><p>Claque virtuelle</p></div>
+    <div class="fun-card"><div class="e">🎲</div><h4>!roll</h4><p>Lance un dé</p></div>
+    <div class="fun-card"><div class="e">🪙</div><h4>!coinflip</h4><p>Pile ou face</p></div>
+    <div class="fun-card"><div class="e">🔄</div><h4>!reverse</h4><p>Texte à l'envers</p></div>
+    <div class="fun-card"><div class="e">🧽</div><h4>!mock</h4><p>tExTe MoCkInG</p></div>
+    <div class="fun-card"><div class="e">🎯</div><h4>!choose</h4><p>Prend une décision</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="yt">
+  <div class="tag">📺 YOUTUBE</div>
+  <div class="stitle">Jamais une vidéo ratée.</div>
+  <p class="sdesc" style="margin-bottom:2rem">Configure une chaîne et Hedgehog poste automatiquement dès qu'une vidéo ou un Short est publié.</p>
+  <div class="yt-card">
+    <div class="yi">▶️</div>
+    <div>
+      <h3>Notifications automatiques</h3>
+      <p>Vérification toutes les 5 minutes · Vidéos <strong>ET</strong> Shorts · Plusieurs chaînes simultanées · Aucune clé API requise.</p>
+    </div>
+  </div>
+</section>
+
+<div class="cta">
+  <h2>Prêt à l'inviter ?</h2>
+  <p>Gratuit. Toujours. Pour toujours.</p>
+  <a href="#" class="btn-p" style="font-size:1.1rem;padding:1rem 2.5rem">🦔 Inviter Hedgehog</a>
+</div>
+
+<footer>
+  <div>🦔 <strong style="color:#8B5523">Hedgehog Bot</strong> — fait par <strong>herrii</strong></div>
+  <div style="color:#333">Préfixe : <code style="color:#8B5523">!</code> · discord.py · Python 3.13</div>
+</footer>
+
+</body>
+</html>
